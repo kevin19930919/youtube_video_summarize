@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	videoID := "LBcOacxep18"
+	videoID := "kllyM3xWmek"
 	video.GetVideoStream(videoID)
 	audio_translate.GetSummarize(config.OpenAISecret)
 }
