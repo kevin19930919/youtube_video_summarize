@@ -34,7 +34,7 @@ The YouTube Video Summarizer has the following dependencies:
 
 To use the YouTube Video Summarizer, follow these steps:
 
-1. Obtain an API key from OpenAI and set it as an environment variable: `export OPENAI_API_KEY=<your_api_key>`
+1. Obtain an API key from OpenAI and set it in `config.json` as variable: `"open_ai_secret" : <your_api_key>`
 2. Run the main program with the video ID as a command-line argument: `go run main.go -vid <video_id>`
 
 The program will download the YouTube video, split it into smaller parts, transcribe the audio using the OpenAI API, and generate a summary of the video's content.
