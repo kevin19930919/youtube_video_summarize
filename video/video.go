@@ -1,27 +1,37 @@
 package video
 
 import (
+	"context"
 	"io"
 	"os"
 
 	"github.com/kkdai/youtube/v2"
 )
 
-func GetVideoStream(videoID string) {
-	client := youtube.Client{}
+type YoutubeDownloader struct {
+	Client *youtube.Client
+}
 
-	video, err := client.GetVideo(videoID)
+func NewYoutubeDownloader() *YoutubeDownloader {
+	return &YoutubeDownloader{
+		Client: &youtube.Client{},
+	}
+}
+
+func (yd *YoutubeDownloader) GetVideoStream(_ context.Context, videoID string, videoFileName string) {
+
+	video, err := yd.Client.GetVideo(videoID)
 	if err != nil {
 		panic(err)
 	}
 
 	formats := video.Formats.WithAudioChannels() // only get videos with audio
-	stream, _, err := client.GetStream(video, &formats[0])
+	stream, _, err := yd.Client.GetStream(video, &formats[0])
 	if err != nil {
 		panic(err)
 	}
 
-	file, err := os.Create("video.mp4")
+	file, err := os.Create(videoFileName)
 	if err != nil {
 		panic(err)
 	}

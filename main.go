@@ -1,12 +1,17 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
 	"github.com/kevin19930919/youtube_video_summarizer/audio_translate"
 	"github.com/kevin19930919/youtube_video_summarizer/config"
 	"github.com/kevin19930919/youtube_video_summarizer/video"
+)
+
+const (
+	inputFileName = "video.mp4"
 )
 
 func main() {
@@ -25,6 +30,13 @@ func main() {
 
 	videoID := *vidPtr
 
-	video.GetVideoStream(videoID)
-	audio_translate.GetSummarize(config.OpenAISecret)
+	// init youtube service
+	youtubeDownloader := video.NewYoutubeDownloader()
+	// init open ai service
+	openAIServer := audio_translate.NewOpenAIServer(config.OpenAISecret)
+
+	context := context.Background()
+
+	youtubeDownloader.GetVideoStream(context, videoID, inputFileName)
+	openAIServer.SpeechToText(context, inputFileName)
 }

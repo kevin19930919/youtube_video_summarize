@@ -17,10 +17,17 @@ const (
 	tempDir        = "temp"
 )
 
-func GetSummarize(apiKey string) {
-	c := openai.NewClient(apiKey)
-	ctx := context.Background()
+type OpenAIServer struct {
+	Client *openai.Client
+}
 
+func NewOpenAIServer(apiKey string) *OpenAIServer {
+	return &OpenAIServer{
+		Client: openai.NewClient(apiKey),
+	}
+}
+
+func (s *OpenAIServer) SpeechToText(ctx context.Context, inputFileName string) {
 	// Create a temporary directory for storing split files
 	if err := os.MkdirAll(tempDir, 0755); err != nil {
 		fmt.Println("Error creating temporary directory:", err)
@@ -47,7 +54,7 @@ func GetSummarize(apiKey string) {
 			Model:    openai.Whisper1,
 			FilePath: splitFilePath,
 		}
-		resp, err := c.CreateTranscription(ctx, req)
+		resp, err := s.Client.CreateTranscription(ctx, req)
 		if err != nil {
 			fmt.Printf("Transcription error: %v\n", err)
 			return
